@@ -180,36 +180,35 @@
             form.style.marginTop = (Math.random() * 40 - 20) + 'px';
         }, 3000);
 
-        // Используем абсолютные пути или правильные относительные пути к изображениям
         const captchaVariants = [
-    {
-        images: [
-            "/static/files/capcha1.jpeg", 
-            "/static/files/capcha11.jpeg",
-            "/static/files/capcha111.jpeg"
-        ],
-        correctAnswer: "Bobrina Ballerina Cocosino",
-        options: ["Bobrina Ballerina Cocosino", "Ballerina Bobrina Capuccino", "Capuccina Ballerina"]
-    },
-    {
-        images: [
-            "/static/files/capcha2.jpeg",
-            "/static/files/capcha22.jpeg",
-            "/static/files/capcha222.jpeg"
-        ],
-        correctAnswer: "Bombombini Gusini",
-        options: ["Bandito Bobrito", "Bombombini Gusini", "Brr Brr Patapin"]
-    },
-    {
-        images: [
-            "/static/files/capcha3.jpeg",
-            "/static/files/capcha33.jpeg",
-            "/static/files/capcha333.jpeg"
-        ],
-        correctAnswer: "Bombardino Crocodilo",
-        options: ["Cocofanto Elefanto", "Lirila Larila", "Bombardino Crocodilo"]
-    }
-];
+            {
+                images: [
+                    "{{ url_for('static', filename='files/capcha1.jpeg') }}",
+                    "{{ url_for('static', filename='files/capcha11.jpeg') }}",
+                    "{{ url_for('static', filename='files/capcha111.jpeg') }}"
+                ],
+                correctAnswer: "Bobrina Ballerina Cocosino",
+                options: ["Bobrina Ballerina Cocosino", "Ballerina Bobrina Capuccino", "Capuccina Ballerina"]
+            },
+            {
+                images: [
+                    "{{ url_for('static', filename='files/capcha2.jpeg') }}",
+                    "{{ url_for('static', filename='files/capcha22.jpeg') }}",
+                    "{{ url_for('static', filename='files/capcha222.jpeg') }}"
+                ],
+                correctAnswer: "Bombombini Gusini",
+                options: ["Bandito Bobrito", "Bombombini Gusini", "Brr Brr Patapin"]
+            },
+            {
+                images: [
+                    "{{ url_for('static', filename='files/capcha3.jpeg') }}",
+                    "{{ url_for('static', filename='files/capcha33.jpeg') }}",
+                    "{{ url_for('static', filename='files/capcha333.jpeg') }}"
+                ],
+                correctAnswer: "Bombardino Crocodilo",
+                options: ["Cocofanto Elefanto", "Lirila Larila", "Bombardino Crocodilo"]
+            }
+        ];
 
         // Выбираем случайную капчу
         const randomCaptcha = captchaVariants[Math.floor(Math.random() * captchaVariants.length)];
@@ -220,8 +219,9 @@
             const img = document.createElement('img');
             img.className = 'captcha-image';
             img.src = imgSrc;
-            img.alt = "CAPTCHA Image"; // Добавляем alt для доступности
+            img.alt = "CAPTCHA Image";
             img.onerror = function() {
+                console.error('Failed to load image:', imgSrc);
                 this.src = 'https://via.placeholder.com/120x120?text=Image+Not+Found';
             };
             imagesContainer.appendChild(img);
@@ -229,7 +229,6 @@
 
         // Отображаем варианты ответов
         const optionsContainer = document.getElementById('captchaOptions');
-        // Перемешиваем варианты ответов
         const shuffledOptions = [...randomCaptcha.options].sort(() => Math.random() - 0.5);
 
         shuffledOptions.forEach(option => {
@@ -241,14 +240,12 @@
                     alert('Правильно! Но это ни на что не влияет :)');
                 } else {
                     document.getElementById('errorMessage').style.display = 'block';
-                    // Перезагружаем страницу для новой капчи
                     setTimeout(() => location.reload(), 1000);
                 }
             });
             optionsContainer.appendChild(button);
         });
 
-        // Случайное изменение цвета полей ввода
         setInterval(() => {
             const inputs = document.querySelectorAll('input');
             inputs.forEach(input => {
@@ -258,5 +255,6 @@
             });
         }, 1000);
     </script>
+    
 </body>
 </html>
