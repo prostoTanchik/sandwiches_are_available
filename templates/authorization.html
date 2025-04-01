@@ -7,7 +7,7 @@
         body {
             font-family: "Comic Sans MS", "Papyrus", cursive;
             background-color: #FF00FF;
-            background-image: url('https://png.pngtree.com/thumb_back/fh260/background/20221018/pngtree-sandwiches-lettuce-hot-lunch-photo-image_1438937.jpg');
+            background-image: url('https://png.pngtree.com/thumb_back/fh260/background/20221018/pngtree-sandwiches-lettuce-hot-lunch-photo-image_1438937.jpeg');
             color: #00FF00;
             margin: 0;
             padding: 20px;
@@ -23,6 +23,12 @@
             box-shadow: 15px 15px 0 #0000FF;
             transform: rotate(3deg);
             animation: shake 0.5s infinite;
+        }
+        @keyframes shake {
+            0%, 100% { transform: rotate(3deg); }
+            25% { transform: rotate(5deg); }
+            50% { transform: rotate(3deg); }
+            75% { transform: rotate(1deg); }
         }
         h1 {
             color: #FF0000;
@@ -150,20 +156,20 @@
         <button id="loginBtn">ВОЙТИ</button>
 
         <div class="captcha-container">
-        <div class="captcha-title">ДОКАЖИТЕ, ЧТО ВЫ НЕ БОТ:</div>
+            <div class="captcha-title">ДОКАЖИТЕ, ЧТО ВЫ НЕ БОТ:</div>
 
-        <div class="captcha-images" id="captchaImages">
-            <!-- Изображения будут добавлены через JS -->
-        </div>
+            <div class="captcha-images" id="captchaImages">
+                <!-- Изображения будут добавлены через JS -->
+            </div>
 
-        <div class="captcha-options" id="captchaOptions">
-            <!-- Варианты ответов будут добавлены через JS -->
-        </div>
+            <div class="captcha-options" id="captchaOptions">
+                <!-- Варианты ответов будут добавлены через JS -->
+            </div>
 
-        <div class="error-message" id="errorMessage">
-            Неверный ответ! Попробуйте еще раз.
+            <div class="error-message" id="errorMessage">
+                Неверный ответ! Попробуйте еще раз.
+            </div>
         </div>
-    </div>
     </div>
 
     <script>
@@ -174,24 +180,36 @@
             form.style.marginTop = (Math.random() * 40 - 20) + 'px';
         }, 3000);
 
-
-         const captchaVariants = [
-            {
-                images: ["/files/capcha1.jpeg", "/files/capcha11.jpeg", "/files/capcha111.jpeg"],
-                correctAnswer: "Bobrina Ballerina Cocosino",
-                options: ["Bobrina Ballerina Cocosino", "Ballerina Bobrina Capuccino", "Capuccina Ballerina"]
-            },
-            {
-                images: ["/files/capcha2.jpeg", "/files/capcha22.jpeg", "/files/capcha222.jpeg"],
-                correctAnswer: "Bombombini Gusini",
-                options: ["Bandito Bobrito", "Bombombini Gusini", "Brr Brr Patapin"]
-            },
-            {
-                images: ["/files/capcha3.jpeg", "/files/capcha33.jpeg", "/files/capcha333.jpeg"],
-                correctAnswer: "Bombardino Crocodilo",
-                options: ["Cocofanto Elefanto", "Lirila Larila", "Bombardino Crocodilo"]
-            }
-        ];
+        // Используем абсолютные пути или правильные относительные пути к изображениям
+        const captchaVariants = [
+    {
+        images: [
+            "/static/files/capcha1.jpeg", 
+            "/static/files/capcha11.jpeg",
+            "/static/files/capcha111.jpeg"
+        ],
+        correctAnswer: "Bobrina Ballerina Cocosino",
+        options: ["Bobrina Ballerina Cocosino", "Ballerina Bobrina Capuccino", "Capuccina Ballerina"]
+    },
+    {
+        images: [
+            "/static/files/capcha2.jpeg",
+            "/static/files/capcha22.jpeg",
+            "/static/files/capcha222.jpeg"
+        ],
+        correctAnswer: "Bombombini Gusini",
+        options: ["Bandito Bobrito", "Bombombini Gusini", "Brr Brr Patapin"]
+    },
+    {
+        images: [
+            "/static/files/capcha3.jpeg",
+            "/static/files/capcha33.jpeg",
+            "/static/files/capcha333.jpeg"
+        ],
+        correctAnswer: "Bombardino Crocodilo",
+        options: ["Cocofanto Elefanto", "Lirila Larila", "Bombardino Crocodilo"]
+    }
+];
 
         // Выбираем случайную капчу
         const randomCaptcha = captchaVariants[Math.floor(Math.random() * captchaVariants.length)];
@@ -202,6 +220,10 @@
             const img = document.createElement('img');
             img.className = 'captcha-image';
             img.src = imgSrc;
+            img.alt = "CAPTCHA Image"; // Добавляем alt для доступности
+            img.onerror = function() {
+                this.src = 'https://via.placeholder.com/120x120?text=Image+Not+Found';
+            };
             imagesContainer.appendChild(img);
         });
 
