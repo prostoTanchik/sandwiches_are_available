@@ -1,0 +1,186 @@
+<!-- templates/user_profile.html -->
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="profile-container" style="
+        background: repeating-linear-gradient(45deg, #FFF, #FFF 10px, #BADA55 10px, #BADA55 20px);
+        padding: 20px;
+        border: 5px dashed #F00;
+        margin-top: 20px;
+        text-align: center;
+    ">
+        <h1 style="color: #F00; text-shadow: 3px 3px 0 #000; transform: rotate(-2deg);">
+            🍞 ПРОФИЛЬ БУТЕРБРОДОМАНА 🍞
+        </h1>
+
+        <!-- Фейковые данные пользователя -->
+        <div class="user-data" style="
+            background: #000;
+            color: #FFF;
+            padding: 15px;
+            margin: 10px auto;
+            max-width: 500px;
+            border: 3px solid #F00;
+        ">
+            <p style="margin: 5px 0;">Имя: <span style="color: #BADA55;">{{ user.name }}</span></p>
+            <p style="margin: 5px 0;">Email: <span style="color: #BADA55;">{{ user.email }}</span></p>
+            <p style="margin: 5px 0;">ID: <span style="color: #BADA55;">{{ user.id }}</span> <small>(никому не говорите!)</small></p>
+            <p style="margin: 5px 0;">Баланс: <span style="color: #BADA55;">{{ "%.2f"|format(user.balance) }} ₽</span> <small>(недостаточно для бутерброда)</small></p>
+        </div>
+
+        <!-- Прогресс "уровня бутербродомана" -->
+        <div class="sandwich-level" style="
+            background: #FFF;
+            padding: 10px;
+            margin: 20px auto;
+            max-width: 300px;
+            border: 3px dashed #00F;
+        ">
+            <h3 style="margin: 0 0 10px 0; color: #F00;">УРОВЕНЬ БУТЕРБРОДОМАНА</h3>
+            <div style="
+                background: #EEE;
+                height: 30px;
+                border: 2px solid #000;
+                position: relative;
+            ">
+
+            <div style="
+                background: linear-gradient(to right, #F00, #FF0);
+                height: 100%;
+                text-align: center;
+                line-height: 30px;
+                color: #000;
+                font-weight: bold;
+            ">
+
+            </div>
+            </div>
+            <p style="margin: 10px 0 0 0; font-size: 12px;">
+                До следующего уровня: {{ 100 - user.level }} бутербродов
+            </p>
+        </div>
+
+        <!-- Статистика (полностью фейковая) -->
+        <div class="stats" style="
+            background: #000;
+            color: #FFF;
+            padding: 15px;
+            margin: 20px auto;
+            max-width: 500px;
+            border: 3px dashed #F00;
+        ">
+            <h3 style="margin: 0 0 10px 0; color: #BADA55;">ВАША СТАТИСТИКА</h3>
+            <p style="margin: 5px 0;">Всего заказов: {{ user.orders }} <small>(из них {{ user.orders - 1 }} потеряно)</small></p>
+            <p style="margin: 5px 0;">Любимый ингредиент: {{ user.fav_ingredient }}</p>
+            <p style="margin: 5px 0;">Потрачено: {{ user.total_spent }} ₽ <small>(жаль)</small></p>
+            <p style="margin: 5px 0;">Рекорд: {{ user.record }} бутербродов за раз</p>
+        </div>
+
+        <!-- Кнопка "Сбросить жизнь в ноль" -->
+        <div class="reset-life" style="margin: 30px 0;">
+            <button 
+                onclick="if(confirm('ТОЧНО ХОТИТЕ ОБНУЛИТЬ АККАУНТ?')) { document.getElementById('resetModal').style.display = 'block' }" 
+                style="
+                    background: #F00;
+                    color: #FFF;
+                    font-size: 24px;
+                    padding: 15px 30px;
+                    border: none;
+                    border-radius: 50px;
+                    cursor: pointer;
+                    animation: pulse 1s infinite;
+                "
+            >
+                🔥 СБРОСИТЬ БУРУРБРОДЫ В НОЛЬ
+            </button>
+        </div>
+
+        <!-- Модальное окно "сброса жизни" -->
+        <div id="resetModal" style="
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            color: #FFF;
+            text-align: center;
+            padding-top: 100px;
+        ">
+            <div style="
+                background: #000;
+                border: 5px dashed #F00;
+                max-width: 500px;
+                margin: 0 auto;
+                padding: 20px;
+            ">
+                <h2>ВЫ УСПЕШНО ОБНУЛИЛИ УРОВЕНЬ БУРУРБРОДАВ</h2>
+                <p>Все ваши достижения, бутерброды, статистика, заказы, мечты и надежды удалены.</p>
+                <p>Начните с чистого листа (но зачем?).</p>
+                <button 
+                    onclick="document.getElementById('resetModal').style.display = 'none'; alert('Поздравляем! Теперь вы никто.');" 
+                    style="
+                        background: #F00;
+                        color: #FFF;
+                        border: none;
+                        padding: 10px 20px;
+                        cursor: pointer;
+                        margin-top: 20px;
+                    "
+                >
+                    Принять поражение
+                </button>
+            </div>
+        </div>
+
+        <!-- Секретный раздел -->
+        <div class="secret-section" style="
+            margin-top: 30px;
+            padding: 10px;
+            border-top: 3px dotted #000;
+        ">
+            <button 
+                onclick="document.getElementById('secret').style.display = 'block'" 
+                style="
+                    background: transparent;
+                    border: none;
+                    color: #888;
+                    cursor: pointer;
+                "
+            >
+                Показать секретный раздел (не нажимать)
+            </button>
+            <div id="secret" style="display: none; margin-top: 10px;">
+                <p style="font-size: 10px; color: #888;">
+                    Секрет: бутерброды — это иллюзия.<br>
+                    Всё, что вы ели, было хлебом с воздухом.<br>
+                    Ваша жизнь — ложь.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // === СЛУЧАЙНОЕ ИЗМЕНЕНИЕ БАЛАНСА ===
+        setInterval(() => {
+            const balanceElement = document.querySelector('.user-data p:nth-child(4) span');
+            if (balanceElement) {
+                const currentBalance = parseFloat(balanceElement.textContent);
+                const newBalance = Math.max(0, currentBalance + (Math.random() > 0.5 ? 10 : -10));
+                balanceElement.textContent = newBalance.toFixed(2) + ' ₽';
+            }
+        }, 3000);
+
+        // === АНИМАЦИЯ УРОВНЯ ===
+        setInterval(() => {
+            if (level < 100 && Math.random() > 0.7) {
+                level += 1;
+                document.querySelector('.sandwich-level div div').style.width = level + '%';
+                document.querySelector('.sandwich-level div div').textContent = level + '%';
+                document.querySelector('.sandwich-level p').textContent = `До следующего уровня: ${100 - level} бутербродов`;
+            }
+        }, 5000);
+    </script>
+{% endblock %}

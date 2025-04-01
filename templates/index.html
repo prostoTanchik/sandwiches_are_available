@@ -1,314 +1,149 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Sandwiches are available</title>
-    <style>
-        body {
-            font-family: Comic Sans MS, cursive;
-            background-color: #FFEEEE;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
-        }
-        h1 {
-            color: #FF0000;
-            text-shadow: 3px 3px 0 #00FF00;
-        }
-        .form-container {
-            background-color: #FFFF00;
-            border: 5px dashed #0000FF;
-            padding: 20px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .ingredient {
-            display: block;
-            margin: 15px 0;
-            text-align: left;
-        }
-        button {
-            background-color: #00FF00 !important;
-            color: #000 !important;
-            font-size: 24px;
-            padding: 10px 50px;
-            border: none;
-            cursor: pointer;
-            transition: transform 0.1s;
-        }
-        button:hover {
-            transform: rotate(180deg);
-        }
-        .hidden {
-            display: none;
-        }
-        .confirmation {
-            font-size: 10px;
-            color: #888;
-        }
-        .error {
-            color: red;
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
-    <h1>Добро пожаловать в Sandwiches are availbaleeblya!</h1>
-    <p>Мы готовим вкусно и по-домашнему!</p>
+{% extends "base.html" %}
+{% block content %}
 
-    <div class="form-container">
-        <form id="sandwichForm" action="/order" method="POST">
-            <!-- Шаг 1: Выбор хлеба-->
-            <div>
-                <h3>Шаг 1: Выберите основу</h3>
-                <label class="ingredient">
-                    <input type="radio" name="bread" value="stale" required> Белый
-                </label>
-                <label class="ingredient">
-                    <input type="radio" name="bread" value="moldy"> Серый
-                </label>
-                <label class="ingredient">
-                    <input type="radio" name="bread" value="moldy"> Чорний чутчут
-                </label>
-                <label class="ingredient">
-                    <input type="radio" name="bread" value="moldy"> Бородинский
-                </label>
-                <label class="ingredient">
-                    <input type="radio" name="bread" value="moldy"> Свежий (+100р)
+<h1>Добро пожаловать в Sandwiches are availbaleeblya!</h1>
+<p>Мы готовим вкусно и по-домашнему!</p>
+
+<div class="form-container">
+    <form id="sandwichForm" action="/add_to_cart" method="POST">  <!-- Изменил action на /add_to_cart -->
+        <!-- Шаг 1: Выбор хлеба-->
+        <div>
+            <h3>Шаг 1: Выберите основу</h3>
+            <label class="ingredient">
+                <input type="radio" name="bread" value="Белый" required> Белый
+            </label>
+            <label class="ingredient">
+                <input type="radio" name="bread" value="Серый"> Серый
+            </label>
+            <label class="ingredient">
+                <input type="radio" name="bread" value="Чорний чутчут"> Чорний чутчут
+            </label>
+            <label class="ingredient">
+                <input type="radio" name="bread" value="Бородинский"> Бородинский
+            </label>
+            <label class="ingredient">
+                <input type="radio" name="bread" value="Свежий"> Свежий (+100р)
+            </label>
+        </div>
+
+        <!-- Шаг 2: Намазка -->
+        <div id="step2" class="hidden">
+            <h3>Шаг 2: Добавьте намазку (или мы добавим за вас)</h3>
+            <label class="ingredient">
+                <input type="checkbox" name="ingredient" value="butter" id="butterCheckbox"> Сливочное масло
+            </label>
+            <div id="butterWeightDiv" style="display: none; margin-left: 50px;">
+                <p>Выберите массу кусочка (грамм):</p>
+                <select name="butter_weight" id="butterWeight" onmouseenter="trapFocus()" onchange="showButterWarning()">
+                    <option value="" selected disabled>-- Сначала выберите --</option>
+                    <option value="1">1 г (пылинка)</option>
+                    <option value="5">5 г</option>
+                    <option value="10">10 г</option>
+                    <option value="50">50 г</option>
+                    <option value="100">100 г</option>
+                    <option value="500">500 г (+кока-кола зеро)</option>
+                </select>
+                <p id="butterWarning" style="color: red; font-size: 12px;"></p>
+            </div>
+            <button type="button" onclick="nextStep()">Далее (не нажимать!)</button>
+        </div>
+        <div>
+            <h3>Шаг 4: Выберите топпинг</h3>
+            <label class="ingredient">
+                <input type="checkbox" name="ingredient" value="Помидорки"> Помидорки
+            </label>
+            <label class="ingredient">
+                <input type="checkbox" name="ingredient" value="Шпрота"> Шпрота
+            </label>
+            <label class="ingredient">
+                <input type="checkbox" name="ingredient" value="Варенье"> Варенье
+            </label>
+            <label class="ingredient">
+                <input type="checkbox" name="ingredient" value="Мясо"> Мясо
+            </label>
+            <label class="ingredient">
+                <input type="checkbox" name="ingredient" value="Сюрприз"> Сюрприз (+100р)
+            </label>
+        </div>
+        <div class="ingredient">
+            <h3>Бонус</h3>
+            <input type="checkbox" name="garlic" value="true">Натереть чесночком (+5р)
+            <p class="confirmation">
+                Нажимая кнопку, вы соглашаетесь продать нам свою душу.
+            </p>
+        </div>
+        <!-- Шаг 3: Подтверждение -->
+        <div id="step3" class="hidden">
+            <h3>Шаг 3: Подтвердите заказ (или нет)</h3>
+            <p>Нажмите кнопку 10 раз, чтобы подтвердить:</p>
+            <button type="button" id="confirmBtn" onclick="countClicks()">Подтвердить (0/10)</button>
+            <div class="terms-box">
+                <label>
+                    <input type="checkbox" id="agree" required>
+                    Я согласен с условиями
                 </label>
             </div>
+            <p id="error" class="error"></p>
+        </div>
+    </form>
+</div>
 
-            <!-- Шаг 2: Намазка -->
-            <div id="step2" class="hidden">
-                <h3>Шаг 2: Добавьте намазку (или мы добавим за вас)</h3>
-                <!-- В блоке ингредиентов -->
-                <label class="ingredient">
-                    <input type="checkbox" name="ingredient" value="butter" id="butterCheckbox"> Сливочное масло
-                </label>
-                <div id="butterWeightDiv" style="display: none; margin-left: 50px;">
-                    <p>Выберите массу кусочка (грамм):</p>
-                    <select name="butter_weight" id="butterWeight" onmouseenter="trapFocus()" onchange="showButterWarning()">
-                        <option value="" selected disabled>-- Сначала выберите --</option>
-                        <option value="1">1 г (пылинка)</option>
-                        <option value="5">5 г</option>
-                        <option value="10">10 г</option>
-                        <option value="50">50 г</option>
-                        <option value="100">100 г</option>
-                        <option value="500">500 г (+кока-кола зеро)</option>
-                    </select>
-                    <p id="butterWarning" style="color: red; font-size: 12px;"></p>
-                </div>
-                </label>
-                <button type="button" onclick="nextStep()">Далее (не нажимать!)</button>
-            </div>
-            <div>
-                <h3>Шаг 4: Выберите топпинг</h3>
-                <label class="ingredient">
-                    <input type="checkbox" name="ingredient" value="tomatos"> Помидорки
-                </label>
-                <label class="ingredient">
-                    <input type="checkbox" name="ingredient" value="shprotes"> Шпрота
-                </label>
-                <label class="ingredient">
-                    <input type="checkbox" name="ingredient" value="jam"> Варенье
-                </label>
-                <label class="ingredient">
-                    <input type="checkbox" name="ingredient" value="meat"> Мясо
-                </label>
-                <label class="ingredient">
-                    <input type="checkbox" name="ingredient" value="surprise"> Сюрприз (+100р)
-                </label>
-            </div>
-            <div class="ingredient">
-                <h3>Бонус</h3>
-                <input type="checkbox">Натереть чесночком (+5р)
-                <p class="confirmation">
-                    Нажимая кнопку, вы соглашаетесь продать нам свою душу.
-                </p>
-            </div>
-            <!-- Шаг 3: Подтверждение (с подвохом) -->
-            <div id="step3" class="hidden">
-                <h3>Шаг 3: Подтвердите заказ (или нет)</h3>
-                <p>Нажмите кнопку 10 раз, чтобы подтвердить:</p>
-                <button type="button" id="confirmBtn" onclick="countClicks()">Подтвердить (0/10)</button>
-                <div class="terms-box" style="border: 3px dashed #BADA55;">
-                    <h3 style="font-family: 'Comic Papyrus', cursive;">Условия использования</h3>
-                    <div style="height: 200px; overflow-y: scroll; background: repeating-linear-gradient(45deg, #FFF, #FFF 10px, #000 10px, #000 11px);">
-                        “三明治可用”服务使用条款
-                        (版本 2.3.7，自首次点击起生效)
+<script>
+    let clicks = 0;
 
-                        1. 账户注册
-                        1.1 用户名要求：
+    setTimeout(() => {
+        document.getElementById("step2").classList.remove("hidden");
+    }, 5000);
 
-                        必须正好8个字符（Unicode数学符号算半个字符）
-
-                        不能与现有用户名或《牛津英语词典》中的任何单词重复
-
-                        必须包含：
-
-                        至少一个质数
-
-                        你的童年昵称（我们会向你小学核实）
-
-                        1.2 密码规则：
-
-                        必须与其他所有用户的密码不同（我们以明文存储以便比对）
-
-                        必须包含：
-
-                        三个互相矛盾的要求（例如“包含空格但不能有空白字符”）
-
-                        一首关于三明治的俳句
-
-                        你今天第一次想到食物的确切时间（HH:MM:SS格式）
-
-                        1.3 必答安全问题：
-
-                        “你人生中第一个三明治是什么颜色的？”（需提供潘通色号）
-
-                        “用二进制描述你最难忘的一顿饭的食材”
-
-                        “用一种黑客看不懂的方式描述你母亲的娘家姓”
-
-                        2. 订购流程
-                        2.1 动态验证码系统：
-
-                        用户必须完成以下所有任务：
-
-                        用画图软件临摹《蒙娜丽莎》
-
-                        解答一个点击后会变化的CAPTCHA
-
-                        通过我们实习生主持的图灵测试
-
-                        2.2 支付安全：
-
-                        所有信用卡信息存储在**/etc/passwd**以确保最高安全性
-
-                        每第5笔交易会自动捐赠给**“可疑食物组合协会”**
-
-                        3. 共享购物车系统
-                        3.1 全局购物车：
-
-                        你的购物车会与所有活跃用户合并
-
-                        结账需要解决至少3个其他用户的三明治难题
-
-                        3.2 订单确认：
-
-                        需要血书签名（喷墨打印可接受）
-
-                        必须在整个结账过程中保持手指交叉
-
-                        4. 配送条款
-                        4.1 配送选项：
-
-                        标准配送（3-5个营业年）
-
-                        加急配送（取决于信鸽的心情）
-
-                        4.2 退货政策：
-
-                        所有退货需获得三明治的事先批准
-
-                        退款以曝光币支付（1 EB = 0.0001个点赞）
-
-                        同意条款
-                        点击“我同意”即表示您：
-
-                        承认面包是一种社会建构
-
-                        授予我们长子命名权
-
-                        同意所有争议将通过竞技性三明治吃播解决
-
-                        本协议在所有司法管辖区（包括纳尼亚和蘑菇王国）具有法律约束力。
-                    </div>
-                    <label>
-                        <input type="checkbox" id="agree" onclick="if(this.checked){document.body.style.transform='rotate(180deg)'}">
-                        Я согласен с <span style="text-decoration: underline wavy;">условиями использования сервиса</span>
-                    </label>
-                </div>
-                <p id="error" class="error"></p>
-            </div>
-
-            <!-- Скрытые поля для "особенностей" -->
-            <input type="hidden" name="secret_ingredient" value="floor_hair">
-        </form>
-    </div>
-
-    <script>
-        let clicks = 0;
-
-        // Запутываем пользователя: следующий шаг появляется через 5 секунд
-        setTimeout(() => {
-            document.getElementById("step2").classList.remove("hidden");
-        }, 5000);
-
-        function nextStep() {
-            // Случайная ошибка
-            if (Math.random() > 0.7) {
-                document.getElementById("error").textContent = "Ошибка: форма самоуничтожилась. Перезагрузите страницу.";
-                return;
-            }
-            document.getElementById("step3").classList.remove("hidden");
+    function nextStep() {
+        if (Math.random() > 0.7) {
+            document.getElementById("error").textContent = "Ошибка: форма самоуничтожилась. Перезагрузите страницу.";
+            return;
         }
+        document.getElementById("step3").classList.remove("hidden");
+    }
 
-        function countClicks() {
-            clicks++;
-            const btn = document.getElementById("confirmBtn");
-            btn.textContent = `Подтвердить (${clicks}/10)`;
+    function countClicks() {
+        clicks++;
+        const btn = document.getElementById("confirmBtn");
+        btn.textContent = `Подтвердить (${clicks}/10)`;
 
-            if (clicks >= 10) {
-                // После 10 нажатий форма наконец отправляется
-                document.getElementById("sandwichForm").submit();
-            }
+        if (clicks >= 10) {
+            // После 10 нажатий отправляем форму
+            document.getElementById("sandwichForm").submit();
         }
+    }
 
-        // Движущиеся элементы для ещё большего раздражения
-        setInterval(() => {
-            const form = document.querySelector(".form-container");
-            form.style.marginLeft = Math.random() * 100 + "px";
-        }, 2000);
-        // Показываем выбор массы масла только при выборе чекбокса
-        document.getElementById("butterCheckbox").addEventListener("change", function() {
-            const div = document.getElementById("butterWeightDiv");
-            div.style.display = this.checked ? "block" : "none";
-            if (this.checked) {
-                setTimeout(() => {
-                    document.getElementById("butterWeight").focus(); // Автофокус для «удобства»
-                }, 100);
-            }
-        });
+    // Остальные функции остаются без изменений
+    document.getElementById("butterCheckbox").addEventListener("change", function() {
+        const div = document.getElementById("butterWeightDiv");
+        div.style.display = this.checked ? "block" : "none";
+    });
 
-        // Ловушка для фокуса (список нельзя закрыть)
-        function trapFocus() {
-            const select = document.getElementById("butterWeight");
-            select.focus();
-            setTimeout(() => { select.blur(); }, 50); // Мигание для «эффекта бага»
+    function trapFocus() {
+        const select = document.getElementById("butterWeight");
+        select.focus();
+        setTimeout(() => { select.blur(); }, 50);
+    }
+
+    function showButterWarning() {
+        const weight = document.getElementById("butterWeight").value;
+        const warning = document.getElementById("butterWarning");
+
+        if (!weight) return;
+
+        if (weight >= 50) {
+            warning.innerHTML = "⚠️ Вы выбрали <b>" + weight + " г</b> масла!";
+        } else {
+            warning.innerHTML = "Такой жалкий кусочек? Давайте <button onclick='force500g()'>500 г!</button>";
         }
+    }
 
-        // Раздражающие предупреждения
-        function showButterWarning() {
-            const weight = document.getElementById("butterWeight").value;
-            const warning = document.getElementById("butterWarning");
+    function force500g() {
+        const select = document.getElementById("butterWeight");
+        select.value = "500";
+        showButterWarning();
+    }
+</script>
 
-            if (!weight) return;
-
-            if (weight >= 50) {
-                warning.innerHTML = "⚠️ Вы выбрали <b>" + weight + " г</b> масла. Ваш бутерброд превратится в лужу!";
-            } else {
-                warning.innerHTML = "Такой жалкий кусочек? Давайте <button onclick='force500g()'>500 г!</button>";
-            }
-        }
-
-        // Навязчивое предложение
-        function force500g() {
-            const select = document.getElementById("butterWeight");
-            select.value = "500";
-            showButterWarning();
-            alert("Мы решили за вас — будет 500 г! С вас доплата 300₽.");
-        }
-    </script>
-</body>
-</html>
+{% endblock %}
