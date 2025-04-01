@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>РЕГИСТРАЦИЯ (ЗАКРОЕТСЯ НАВСЕГДА)</title>
+    <style>
+        body {
+            font-family: "Comic Sans MS", cursive;
+            background-color: #FF00FF;
+            background-image: url('https://png.pngtree.com/thumb_back/fh260/background/20221018/pngtree-sandwiches-lettuce-hot-lunch-photo-image_1438937.jpg');
+            color: #00FF00;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .form-container {
+            width: 80%;
+            max-width: 500px;
+            background-color: #FFFF00;
+            border: 15px ridge #FF0000;
+            padding: 20px;
+            position: relative;
+            animation: shake 0.5s infinite;
+        }
+        .close-btn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #FF0000;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10000;
+        }
+        h1 {
+            text-align: center;
+            font-size: 32px;
+            color: #FF0000;
+            text-shadow: 3px 3px 0 #000;
+            margin-top: 0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            font-size: 18px;
+            color: #0000FF;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #00FFFF;
+            border: 3px dotted #FF00FF;
+            box-sizing: border-box;
+        }
+        button {
+            background: linear-gradient(to right, #FF0000, #00FF00);
+            color: white;
+            font-size: 20px;
+            padding: 15px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .hidden {
+            display: none !important;
+        }
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="popup-overlay" id="popup">
+        <div class="form-container">
+            <button class="close-btn" id="closeBtn">✕</button>
+            <h1>РЕГИСТРАЦИЯ</h1>
+            <p style="text-align: center; color: #FF0000; font-weight: bold;">
+                ВНИМАНИЕ! ЭТО ЕДИНСТВЕННЫЙ ШАНС ЗАРЕГИСТРИРОВАТЬСЯ!<br>
+                ПОСЛЕ ЗАКРЫТИЯ ФОРМА ИСЧЕЗНЕТ НАВСЕГДА!
+            </p>
+
+            <form id="registrationForm">
+                <div class="form-group">
+                    <label for="username">Имя пользователя:</label>
+                    <input type="text" id="username" name="username" required minlength="5">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Пароль:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                <label for="motherMaidenName">Девичья фамилия матери (ОБЯЗАТЕЛЬНО):</label>
+                <input type="text" id="motherMaidenName" name="motherMaidenName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="birthCity">Где вы появились на свет? (ГОРОД):</label>
+                    <input type="text" id="birthCity" name="birthCity" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="firstPet">Кличка вашего первого животного:</label>
+                    <input type="text" id="firstPet" name="firstPet" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="firstTeacher">Первый учитель (ФИО полностью):</label>
+                    <input type="text" id="firstTeacher" name="firstTeacher" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="childhoodSchool">Школа, где учились (ПОЛНОЕ НАЗВАНИЕ):</label>
+                    <input type="text" id="childhoodSchool" name="childhoodSchool" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="firstCar">Первая машина (МОДЕЛЬ И ГОД):</label>
+                    <input type="text" id="firstCar" name="firstCar" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="favoriteMedia">Любимая книга/фильм/группа в юности:</label>
+                    <input type="text" id="favoriteMedia" name="favoriteMedia" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="grandparentProfession">Профессия бабушки/дедушки:</label>
+                    <input type="text" id="grandparentProfession" name="grandparentProfession" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="parentsWeddingDate">Дата свадьбы родителей (ТОЧНО!):</label>
+                    <input type="date" id="parentsWeddingDate" name="parentsWeddingDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="childhoodStreet">Улица, где жили в детстве:</label>
+                    <input type="text" id="childhoodStreet" name="childhoodStreet" required>
+                </div>
+                <button type="submit">ЗАРЕГИСТРИРОВАТЬСЯ</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="closedMessage" class="hidden" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: black; font-size: 24px;">
+        <h1>ФОРМА РЕГИСТРАЦИИ ЗАКРЫТА НАВСЕГДА</h1>
+        <p>Вы упустили свой единственный шанс</p>
+        <p style="font-size: 12px;">(попробуйте очистить cookies или использовать другой браузер)</p>
+    </div>
+
+    <script>
+        document.getElementById('closeBtn').addEventListener('click', function() {
+            // Закрываем форму навсегда
+            document.getElementById('popup').classList.add('hidden');
+            document.getElementById('closedMessage').classList.remove('hidden');
+
+            // Сохраняем в localStorage, что форма закрыта
+            localStorage.setItem('registrationClosed', 'true');
+
+            // Перенаправляем на главную через 5 секунд
+            setTimeout(function() {
+                window.location.href = 'https://example.com';
+            }, 5000);
+        });
+
+        // Проверяем, не закрыта ли уже форма
+        if (localStorage.getItem('registrationClosed') === 'true') {
+            document.getElementById('popup').classList.add('hidden');
+            document.getElementById('closedMessage').classList.remove('hidden');
+        }
+
+        // Запрещаем закрытие по ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                alert('ФОРМУ НЕЛЬЗЯ ЗАКРЫТЬ КЛАВИШЕЙ ESC! ИСПОЛЬЗУЙТЕ КРЕСТИК!');
+            }
+        });
+
+        // Запрещаем клик вне формы
+        document.getElementById('popup').addEventListener('click', function(e) {
+            if (e.target === this) {
+                alert('КЛИКАЙТЕ ТОЛЬКО ПО ФОРМЕ ИЛИ КРЕСТИКУ!');
+            }
+        });
+    </script>
+</body>
+</html>
