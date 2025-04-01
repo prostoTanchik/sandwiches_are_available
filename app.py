@@ -106,26 +106,32 @@ def remove_from_cart():
 
 @app.route('/orders')
 def orders():
-    """Generate fake order history"""
+    """Генерирует фейковые заказы"""
     orders = []
     for i in range(3):
         orders.append({
-            'id': random.randint(100, 999),
-            'date': '2023-13-32',  # Valid date format
-            'status': random.choice(['Съеден', 'Потерян', 'Стал sentient']),
-            'total': random.uniform(100, 1000)
+            "id": random.randint(100, 999),
+            "date": "2023-13-32",  # Неправильная дата для хаоса
+            "status": random.choice(["Украден курьером", "Сгорел"]),
+            "total": random.uniform(500, 5000)
         })
     return render_template('orders.html', orders=orders)
 
 @app.route('/user_profile')
 def user_profile():
-    """Generate random user profile"""
-    return render_template('user_profile.html',
-                         user={
-                             'name': random.choice(['Вася', 'Гоша', 'Клава']),
-                             'email': 'haha@no.way',
-                             'bio': 'Professional sandwich sufferer'
-                         })
+    """Генерирует фейковый профиль"""
+    ingredients = ['гвозди', 'воздух', 'шпроты', 'любовь', 'отчаяние']
+    return render_template('user_profile.html', user={
+        'name': random.choice(['Вася', 'Гоша', 'Клава']),
+        'email': 'haha@no.way',
+        'id': random.randint(1000, 9999),
+        'balance': random.uniform(0, 100),
+        'level': random.randint(1, 99),
+        'orders': random.randint(1, 10),
+        'fav_ingredient': random.choice(ingredients),
+        'total_spent': random.uniform(500, 5000),
+        'record': random.randint(3, 15)
+    })
 
 @app.route('/comments', methods=['GET', 'POST'])
 def comments():

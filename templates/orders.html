@@ -1,0 +1,150 @@
+<!-- templates/orders.html -->
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="orders-container" style="
+        background: repeating-linear-gradient(45deg, #FFF, #FFF 10px, #FF0 10px, #FF0 20px);
+        padding: 20px;
+        border: 5px dashed #F00;
+        margin-top: 20px;
+    ">
+        <h1 style="color: #F00; text-shadow: 3px 3px 0 #000; transform: rotate(-5deg);">
+            🚨 ВАШИ ЗАКАЗЫ (НАДЕЕМСЯ) 🚨
+        </h1>
+
+        <!-- Фейковая "утечка данных" -->
+        <div class="data-leak" style="
+            background: #000;
+            color: #0F0;
+            font-family: monospace;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #F00;
+            animation: blink 0.5s infinite;
+        ">
+            ⚠️ ВНИМАНИЕ: ВАШИ ДАННЫЕ УТЕКАЮТ! ⚠️<br>
+            IP: 127.0.0.1 | Последний заказ: БУТЕРБРОД С ГВОЗДЯМИ
+        </div>
+
+        <!-- Список заказов (полностью фейковый) -->
+        <div class="order-list">
+            {% for order in orders %}
+            <div class="order-item" style="
+                background: #FFF;
+                padding: 15px;
+                margin: 10px 0;
+                border: 3px dashed #00F;
+                position: relative;
+                transition: all 0.3s;
+            ">
+                <h3 style="color: #F00; margin: 0;">Заказ #{{ order.id }}</h3>
+                <p style="margin: 5px 0;">Дата: {{ order.date }} (на самом деле нет)</p>
+                <p style="margin: 5px 0;">Статус: <span style="color: #F00;">{{ order.status }}</span></p>
+                <p style="margin: 5px 0;">Сумма: {{ order.total }} ₽ <small>(+ чаевые {{ (order.total * 0.5)|round(2) }} ₽)</small></p>
+                <button 
+                    onclick="alert('Заказ #{{ order.id }} уже съели. Извините.')" 
+                    style="
+                        background: #F00;
+                        color: #FFF;
+                        border: none;
+                        padding: 5px 10px;
+                        cursor: pointer;
+                        margin-top: 10px;
+                    "
+                >
+                    Где мой заказ?!
+                </button>
+                <div class="order-secret" style="
+                    font-size: 8px;
+                    color: #888;
+                    margin-top: 10px;
+                ">
+                    Секретный код: BREAD-{{ order.id }}-IS-A-LIE
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Кнопка "Пожаловаться на жизнь" -->
+        <div class="complain-button" style="margin-top: 20px; text-align: center;">
+            <button 
+                onclick="document.getElementById('complainModal').style.display = 'block'" 
+                style="
+                    background: linear-gradient(to right, #F00, #00F);
+                    color: #FFF;
+                    font-size: 24px;
+                    padding: 15px 30px;
+                    border: none;
+                    border-radius: 50px;
+                    cursor: pointer;
+                    animation: rainbow 2s infinite;
+                "
+            >
+                🚀 ПОЖАЛОВАТЬСЯ НА ЖИЗНЬ
+            </button>
+        </div>
+
+        <!-- Модальное окно жалобы -->
+        <div id="complainModal" style="
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            color: #FFF;
+            text-align: center;
+            padding-top: 100px;
+        ">
+            <div style="
+                background: #000;
+                border: 5px dashed #F00;
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+            ">
+                <h2>ЖАЛОБА ПРИНЯТА (НО НИКОМУ НЕ ИНТЕРЕСНА)</h2>
+                <p>Ваша жалоба будет проигнорирована в течение 3-5 рабочих дней.</p>
+                <p>Спасибо, что выбрали Sandwiches are availableeblya!</p>
+                <button 
+                    onclick="document.getElementById('complainModal').style.display = 'none'" 
+                    style="
+                        background: #F00;
+                        color: #FFF;
+                        border: none;
+                        padding: 10px 20px;
+                        cursor: pointer;
+                        margin-top: 20px;
+                    "
+                >
+                    Закрыть (и страдать дальше)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // === СЛУЧАЙНОЕ ИСЧЕЗНОВЕНИЕ ЗАКАЗОВ ===
+        setInterval(() => {
+            if (Math.random() > 0.8) {
+                const orders = document.querySelectorAll('.order-item');
+                if (orders.length > 0) {
+                    const randomOrder = orders[Math.floor(Math.random() * orders.length)];
+                    randomOrder.style.transform = 'scale(0)';
+                    setTimeout(() => {
+                        randomOrder.remove();
+                        alert('ЗАКАЗ ИСЧЕЗ. ВОЗМОЖНО, ЕГО СЪЕЛИ.');
+                    }, 500);
+                }
+            }
+        }, 10000);
+
+        // === ФЕЙКОВАЯ АНИМАЦИЯ "УТЕЧКИ ДАННЫХ" ===
+        const leakText = document.querySelector('.data-leak');
+        setInterval(() => {
+            leakText.textContent = `⚠️ ВНИМАНИЕ: ВАШИ ДАННЫЕ УТЕКАЮТ! ⚠️\nIP: 127.0.0.1 | Последний заказ: ${['БУТЕРБРОД С ГВОЗДЯМИ', 'ХЛЕБ С ВОЗДУХОМ', 'СЭНДВИЧ "СЮРПРИЗ"'][Math.floor(Math.random() * 3)]}`;
+        }, 3000);
+    </script>
+{% endblock %}
