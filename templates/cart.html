@@ -53,7 +53,11 @@
 
 <!-- MYSTERY ITEM NOTIFICATION -->
 <div id="mysteryNotification" class="notification" style="display: none;">
+<<<<<<< HEAD
     🎉 ВАМ ДОБАВЛЕН ТАИНСТВЕННЫЙ БУТЕРБРОД!🎉
+=======
+    � ВАМ ДОБАВЛЕН ТАИНСТВЕННЫЙ БУТЕРБРОД!🎉
+>>>>>>> backend
     удалить его уже нельзя, не благодарите!
 </div>
 
@@ -65,13 +69,20 @@
         document.getElementById("timer").textContent = timeLeft;
         
         if (timeLeft <= 0) {
+<<<<<<< HEAD
             // Increase all prices by 10%
+=======
+>>>>>>> backend
             document.querySelectorAll(".item-price").forEach(priceEl => {
                 const currentPrice = parseFloat(priceEl.textContent);
                 const newPrice = currentPrice * 1.10;
                 priceEl.textContent = newPrice.toFixed(2);
             });
+<<<<<<< HEAD
             timeLeft = 30; // Reset timer
+=======
+            timeLeft = 30;
+>>>>>>> backend
         }
     }, 1000);
 
@@ -82,6 +93,7 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ surprise: true })
         }).then(() => {
+<<<<<<< HEAD
             // Show notification
             const notif = document.getElementById("mysteryNotification");
             notif.style.display = "block";
@@ -89,6 +101,14 @@
             location.reload(); // Refresh to show new item
         });
     }, 30000); // Every 30 seconds
+=======
+            const notif = document.getElementById("mysteryNotification");
+            notif.style.display = "block";
+            setTimeout(() => { notif.style.display = "none"; }, 3000);
+            location.reload();
+        });
+    }, 30000);
+>>>>>>> backend
 
     // ==== FORCE SOCIAL LOGIN ====
     document.getElementById("socialLogin").addEventListener("click", () => {
@@ -111,7 +131,11 @@
 
     function validateCaptcha() {
         const answer = document.getElementById("captchaInput").value;
+<<<<<<< HEAD
         if (answer === "100") { // 4 in binary is 100
+=======
+        if (answer === "100") {
+>>>>>>> backend
             document.getElementById("captchaBox").style.display = "none";
             window.captchaCallback();
         } else {
@@ -137,10 +161,32 @@
         if (confirm("ВЫ УВЕРЕНЫ?")) {
             if (confirm("СЕРЬЕЗНО?")) {
                 if (confirm("ПОСЛЕДНИЙ ШАНС!")) {
+<<<<<<< HEAD
                     setTimeout(() => {
                         alert("ОШИБКА ПЛАТЕЖА: ВАША КАРТА ОТКЛОНЕНА\n(Но мы уже списали деньги)");
                         window.location.href = '/orders';
                     }, 3000);
+=======
+                    // Отправляем заказ на сервер
+                    fetch('/create_order', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ cart: {{ cart|tojson }} })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Очищаем корзину и перенаправляем на заказы
+                            fetch('/clear_cart', { method: 'POST' })
+                                .then(() => window.location.href = '/orders');
+                        } else {
+                            alert("ОШИБКА: " + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        alert("ОШИБКА ПЛАТЕЖА: " + error.message);
+                    });
+>>>>>>> backend
                 }
             }
         }

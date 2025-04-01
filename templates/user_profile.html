@@ -43,6 +43,7 @@
                 border: 2px solid #000;
                 position: relative;
             ">
+<<<<<<< HEAD
                 <div style="
                     background: linear-gradient(to right, #F00, #FF0);
                     width: {{ user.level }}%;
@@ -54,6 +55,7 @@
                 ">
                     {{ user.level }}%
                 </div>
+
             </div>
             <p style="margin: 10px 0 0 0; font-size: 12px;">
                 До следующего уровня: {{ 100 - user.level }} бутербродов
@@ -173,8 +175,8 @@
             }
         }, 3000);
 
-        // === АНИМАЦИЯ УРОВНЯ ===
         let level = {{ user.level }};
+
         setInterval(() => {
             if (level < 100 && Math.random() > 0.7) {
                 level += 1;

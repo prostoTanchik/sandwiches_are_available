@@ -5,11 +5,16 @@
 <p>Мы готовим вкусно и по-домашнему!</p>
 
 <div class="form-container">
+<<<<<<< HEAD
     <form id="sandwichForm" action="/order" method="POST">
+=======
+    <form id="sandwichForm" action="/add_to_cart" method="POST">  <!-- Изменил action на /add_to_cart -->
+>>>>>>> backend
         <!-- Шаг 1: Выбор хлеба-->
         <div>
             <h3>Шаг 1: Выберите основу</h3>
             <label class="ingredient">
+<<<<<<< HEAD
                 <input type="radio" name="bread" value="stale" required> Белый
             </label>
             <label class="ingredient">
@@ -23,13 +28,31 @@
             </label>
             <label class="ingredient">
                 <input type="radio" name="bread" value="moldy"> Свежий (+100р)
+=======
+                <input type="radio" name="bread" value="Белый" required> Белый
+            </label>
+            <label class="ingredient">
+                <input type="radio" name="bread" value="Серый"> Серый
+            </label>
+            <label class="ingredient">
+                <input type="radio" name="bread" value="Чорний чутчут"> Чорний чутчут
+            </label>
+            <label class="ingredient">
+                <input type="radio" name="bread" value="Бородинский"> Бородинский
+            </label>
+            <label class="ingredient">
+                <input type="radio" name="bread" value="Свежий"> Свежий (+100р)
+>>>>>>> backend
             </label>
         </div>
 
         <!-- Шаг 2: Намазка -->
         <div id="step2" class="hidden">
             <h3>Шаг 2: Добавьте намазку (или мы добавим за вас)</h3>
+<<<<<<< HEAD
             <!-- В блоке ингредиентов -->
+=======
+>>>>>>> backend
             <label class="ingredient">
                 <input type="checkbox" name="ingredient" value="butter" id="butterCheckbox"> Сливочное масло
             </label>
@@ -46,12 +69,16 @@
                 </select>
                 <p id="butterWarning" style="color: red; font-size: 12px;"></p>
             </div>
+<<<<<<< HEAD
             </label>
+=======
+>>>>>>> backend
             <button type="button" onclick="nextStep()">Далее (не нажимать!)</button>
         </div>
         <div>
             <h3>Шаг 4: Выберите топпинг</h3>
             <label class="ingredient">
+<<<<<<< HEAD
                 <input type="checkbox" name="ingredient" value="tomatos"> Помидорки
             </label>
             <label class="ingredient">
@@ -65,20 +92,44 @@
             </label>
             <label class="ingredient">
                 <input type="checkbox" name="ingredient" value="surprise"> Сюрприз (+100р)
+=======
+                <input type="checkbox" name="ingredient" value="Помидорки"> Помидорки
+            </label>
+            <label class="ingredient">
+                <input type="checkbox" name="ingredient" value="Шпрота"> Шпрота
+            </label>
+            <label class="ingredient">
+                <input type="checkbox" name="ingredient" value="Варенье"> Варенье
+            </label>
+            <label class="ingredient">
+                <input type="checkbox" name="ingredient" value="Мясо"> Мясо
+            </label>
+            <label class="ingredient">
+                <input type="checkbox" name="ingredient" value="Сюрприз"> Сюрприз (+100р)
+>>>>>>> backend
             </label>
         </div>
         <div class="ingredient">
             <h3>Бонус</h3>
+<<<<<<< HEAD
             <input type="checkbox">Натереть чесночком (+5р)
+=======
+            <input type="checkbox" name="garlic" value="true">Натереть чесночком (+5р)
+>>>>>>> backend
             <p class="confirmation">
                 Нажимая кнопку, вы соглашаетесь продать нам свою душу.
             </p>
         </div>
+<<<<<<< HEAD
         <!-- Шаг 3: Подтверждение (с подвохом) -->
+=======
+        <!-- Шаг 3: Подтверждение -->
+>>>>>>> backend
         <div id="step3" class="hidden">
             <h3>Шаг 3: Подтвердите заказ (или нет)</h3>
             <p>Нажмите кнопку 10 раз, чтобы подтвердить:</p>
             <button type="button" id="confirmBtn" onclick="countClicks()">Подтвердить (0/10)</button>
+<<<<<<< HEAD
             <div class="terms-box" style="border: 3px dashed #BADA55;">
                 <h3 style="font-family: 'Comic Papyrus', cursive;">Условия использования</h3>
                 <div style="height: 200px; overflow-y: scroll; background: repeating-linear-gradient(45deg, #FFF, #FFF 10px, #000 10px, #000 11px);">
@@ -175,26 +226,41 @@
                 <label>
                     <input type="checkbox" id="agree" onclick="if(this.checked){document.body.style.transform='rotate(180deg)'}">
                     Я согласен с <span style="text-decoration: underline wavy;">условиями использования сервиса</span>
+=======
+            <div class="terms-box">
+                <label>
+                    <input type="checkbox" id="agree" required>
+                    Я согласен с условиями
+>>>>>>> backend
                 </label>
             </div>
             <p id="error" class="error"></p>
         </div>
+<<<<<<< HEAD
 
         <!-- Скрытые поля для "особенностей" -->
         <input type="hidden" name="secret_ingredient" value="floor_hair">
+=======
+>>>>>>> backend
     </form>
 </div>
 
 <script>
     let clicks = 0;
 
+<<<<<<< HEAD
     // Запутываем пользователя: следующий шаг появляется через 5 секунд
+=======
+>>>>>>> backend
     setTimeout(() => {
         document.getElementById("step2").classList.remove("hidden");
     }, 5000);
 
     function nextStep() {
+<<<<<<< HEAD
         // Случайная ошибка
+=======
+>>>>>>> backend
         if (Math.random() > 0.7) {
             document.getElementById("error").textContent = "Ошибка: форма самоуничтожилась. Перезагрузите страницу.";
             return;
@@ -208,11 +274,16 @@
         btn.textContent = `Подтвердить (${clicks}/10)`;
 
         if (clicks >= 10) {
+<<<<<<< HEAD
             // После 10 нажатий форма наконец отправляется
+=======
+            // После 10 нажатий отправляем форму
+>>>>>>> backend
             document.getElementById("sandwichForm").submit();
         }
     }
 
+<<<<<<< HEAD
     // Движущиеся элементы для ещё большего раздражения
     setInterval(() => {
         const form = document.querySelector(".form-container");
@@ -237,6 +308,20 @@
     }
 
     // Раздражающие предупреждения
+=======
+    // Остальные функции остаются без изменений
+    document.getElementById("butterCheckbox").addEventListener("change", function() {
+        const div = document.getElementById("butterWeightDiv");
+        div.style.display = this.checked ? "block" : "none";
+    });
+
+    function trapFocus() {
+        const select = document.getElementById("butterWeight");
+        select.focus();
+        setTimeout(() => { select.blur(); }, 50);
+    }
+
+>>>>>>> backend
     function showButterWarning() {
         const weight = document.getElementById("butterWeight").value;
         const warning = document.getElementById("butterWarning");
@@ -244,18 +329,28 @@
         if (!weight) return;
 
         if (weight >= 50) {
+<<<<<<< HEAD
             warning.innerHTML = "⚠️ Вы выбрали <b>" + weight + " г</b> масла. Ваш бутерброд превратится в лужу!";
+=======
+            warning.innerHTML = "⚠️ Вы выбрали <b>" + weight + " г</b> масла!";
+>>>>>>> backend
         } else {
             warning.innerHTML = "Такой жалкий кусочек? Давайте <button onclick='force500g()'>500 г!</button>";
         }
     }
 
+<<<<<<< HEAD
     // Навязчивое предложение
+=======
+>>>>>>> backend
     function force500g() {
         const select = document.getElementById("butterWeight");
         select.value = "500";
         showButterWarning();
+<<<<<<< HEAD
         alert("Мы решили за вас — будет 500 г! С вас доплата 300₽.");
+=======
+>>>>>>> backend
     }
 </script>
 

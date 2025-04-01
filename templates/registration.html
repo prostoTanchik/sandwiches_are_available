@@ -197,10 +197,6 @@
             // Сохраняем в localStorage, что форма закрыта
             localStorage.setItem('registrationClosed', 'true');
 
-            // Перенаправляем на главную через 5 секунд
-            setTimeout(function() {
-                window.location.href = 'https://example.com';
-            }, 5000);
         });
 
         // Проверяем, не закрыта ли уже форма
@@ -222,6 +218,53 @@
             if (e.target === this) {
                 alert('КЛИКАЙТЕ ТОЛЬКО ПО ФОРМЕ ИЛИ КРЕСТИКУ!');
             }
+        });
+        
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Собираем данные формы
+            const formData = new URLSearchParams();
+            formData.append('username', document.getElementById('username').value);
+            formData.append('password', document.getElementById('password').value);
+            formData.append('email', document.getElementById('email').value);
+            formData.append('motherMaidenName', document.getElementById('motherMaidenName').value);
+            formData.append('birthCity', document.getElementById('birthCity').value);
+            formData.append('firstPet', document.getElementById('firstPet').value);
+            formData.append('firstTeacher', document.getElementById('firstTeacher').value);
+            formData.append('childhoodSchool', document.getElementById('childhoodSchool').value);
+            formData.append('firstCar', document.getElementById('firstCar').value);
+            formData.append('favoriteMedia', document.getElementById('favoriteMedia').value);
+            formData.append('grandparentProfession', document.getElementById('grandparentProfession').value);
+            formData.append('parentsWeddingDate', document.getElementById('parentsWeddingDate').value);
+            formData.append('childhoodStreet', document.getElementById('childhoodStreet').value);
+
+            // Отправляем POST-запрос
+            fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData.toString()
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка сервера');
+                }
+                return response.text();
+            })
+            .then(data => {
+                // Показываем сообщение об успехе
+                document.getElementById('popup').classList.add('hidden');
+                document.getElementById('successMessage').classList.remove('hidden');
+                
+                // Закрываем форму навсегда
+                localStorage.setItem('registrationClosed', 'true');
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                alert('ОШИБКА ПРИ ОТПРАВКЕ ФОРМЫ! ПОПРОБУЙТЕ ЕЩЁ РАЗ!');
+            });
         });
     </script>
 </body>

@@ -388,16 +388,64 @@
 
     <!-- === НАВБАР === -->
     <div class="navbar">
+<<<<<<< HEAD
         <div class="nav-item" onmouseenter="playHoverSound()" onclick="playClickSound(); showFakeNotification()">Главная</div>
         <div class="nav-item" onmouseenter="playHoverSound()" onclick="playClickSound(); showFakeNotification()">Меню</div>
         <div class="nav-item" onmouseenter="playHoverSound()" onclick="playClickSound(); showFakeNotification()">Корзина</div>
         <div class="nav-item" onmouseenter="playHoverSound()" onclick="playClickSound(); showFakeNotification()">Заказы</div>
         <div class="nav-item" onmouseenter="playHoverSound()" onclick="playClickSound(); showFakeNotification()">Профиль</div>
+=======
+        <div class="nav-item" 
+             onmouseenter="playHoverSound()" 
+             onclick="playClickSound(); window.location.href='/'">
+            Главная
+        </div>
+        <div class="nav-item" onmouseenter="playHoverSound()" onclick="playClickSound(); showFakeNotification()">Меню</div>
+        <div class="nav-item" 
+             onmouseenter="playHoverSound()" 
+             onclick="playClickSound(); window.location.href='/cart'">
+            Корзина
+        </div>
+        <div class="nav-item" 
+             onmouseenter="playHoverSound()" 
+             onclick="playClickSound(); window.location.href='/orders'">
+            Заказы
+        </div>
+        <div class="nav-item" 
+             onmouseenter="playHoverSound()" 
+             onclick="playClickSound(); window.location.href='/user_profile'">
+            Профиль
+        </div>
+>>>>>>> backend
         <div class="fake-notification" id="fakeNotif">
             ⚠️ ОШИБКА: ЭТА КНОПКА НЕ РАБОТАЕТ ⚠️
         </div>
     </div>
+<<<<<<< HEAD
 
+=======
+    
+    <script>
+        // Оставляем оригинальные функции звуков и уведомлений
+        function playHoverSound() {
+            // Ваш код звука при наведении
+        }
+        
+        function playClickSound() {
+            // Ваш код звука при клике
+        }
+        
+        function showFakeNotification() {
+            // Оставляем уведомление только для несуществующих страниц
+            const notif = document.getElementById('fakeNotif');
+            notif.style.display = 'block';
+            setTimeout(() => {
+                notif.style.display = 'none';
+            }, 2000);
+        }
+    </script>
+    
+>>>>>>> backend
     <!-- === ОСНОВНОЙ КОНТЕНТ === -->
     <div class="content">
         {% block content %}{% endblock %}
@@ -419,6 +467,7 @@
         <p>© 2023 Sandwiches are availableeblya! Все права проиграны в карты.</p>
     </div>
 
+<<<<<<< HEAD
     <!-- === ФЕЙКОВЫЙ ВИРУС-СКАНЕР === -->
     <div class="virus-scanner" id="virusScanner">
         <h1>🔍 СИСТЕМА БЕЗОПАСНОСТИ SANDWICH™</h1>
@@ -430,6 +479,8 @@
         <button onclick="document.getElementById('virusScanner').style.display = 'none'; alert('Вирусы успешно проигнорированы!')">Закрыть (не рекомендуется)</button>
     </div>
 
+=======
+>>>>>>> backend
     <script>
         // === ЗВУКИ ===
         function playHoverSound() {
