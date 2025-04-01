@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 import random
 
 app = Flask(__name__)
@@ -21,7 +21,7 @@ EXTRA_CHARGES = {
 @app.route('/')
 def menu():
     """Serve your existing cursed menu"""
-    return render_template('menu.html')
+    return render_template('index.html')
 
 @app.route('/order', methods=['POST'])
 def create_order():
@@ -70,6 +70,39 @@ def cart():
     cart = session.get('cart', [])
     total = sum(item.get('price', 0) for item in cart)
     return render_template('cart.html', cart=cart, total=total)
+
+# Mock database of cursed sandwiches
+MYSTERY_ITEMS = [
+    {"description": "Бутерброд с гвоздями", "price": 666.66},
+    {"description": "Сэндвич 'Сюрприз из прошлого'", "price": 999.99},
+    {"description": "Хлеб с воздухом (премиум)", "price": 500.00},
+]
+
+@app.route('/add_mystery_item', methods=['POST'])
+def add_mystery_item():
+    """Add a random cursed item to cart"""
+    if 'cart' not in session:
+        session['cart'] = []
+    
+    mystery_item = random.choice(MYSTERY_ITEMS)
+    session['cart'].append(mystery_item)
+    session.modified = True
+    
+    return jsonify({"success": True})
+
+@app.route('/remove_from_cart', methods=['POST'])
+def remove_from_cart():
+    """50% chance to remove wrong item"""
+    try:
+        index = request.json.get('index')
+        if 'cart' in session and 0 <= index < len(session['cart']):
+            if random.random() > 0.5:  # 50% chance to remove random item
+                index = random.randint(0, len(session['cart'])-1)
+            session['cart'].pop(index)
+            session.modified = True
+    except:
+        pass  # Silence is golden
+    return jsonify({"success": True})
 
 @app.route('/orders')
 def orders():
