@@ -157,6 +157,41 @@
             from { transform: translateX(100%); }
             to { transform: translateX(0); }
         }
+        .captcha-images {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        .captcha-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border: 3px solid #0000FF;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .captcha-image:hover {
+            transform: scale(1.1);
+        }
+        .captcha-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .captcha-option {
+            padding: 15px;
+            background-color: #00FF00;
+            color: #000;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .captcha-option:hover {
+            background-color: #FF00FF;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -174,11 +209,15 @@
         </div>
 
         <!-- CAPTCHA BEFORE ANY ACTION -->
-        <div id="captchaBox" class="captcha-box" style="display: none;">
+         <div id="captchaBox" class="captcha-box" style="display: none;">
             <p>Докажите, что вы не робот:</p>
-            <p>Сколько будет 2 + 2 в двоичной системе?</p>
-            <input type="text" id="captchaInput">
-            <button onclick="validateCaptcha()">Подтвердить</button>
+            <div class="captcha-title">Выберите правильный ответ:</div>
+            <div class="captcha-images" id="captchaImages">
+                <!-- Изображения будут добавлены через JS -->
+            </div>
+            <div class="captcha-options" id="captchaOptions">
+                <!-- Варианты ответов будут добавлены через JS -->
+            </div>
         </div>
 
         <!-- CART ITEMS -->
@@ -263,21 +302,63 @@
             showCaptcha(() => checkout());
         }
 
-        function showCaptcha(callback) {
-            document.getElementById("captchaBox").style.display = "block";
-            window.captchaCallback = callback;
-        }
-
-        function validateCaptcha() {
-            const answer = document.getElementById("captchaInput").value;
-            if (answer === "100") { // 4 in binary is 100
-                document.getElementById("captchaBox").style.display = "none";
-                window.captchaCallback();
-            } else {
-                alert("НЕПРАВИЛЬНО! ПОПРОБУЙТЕ ЕЩЕ РАЗ.");
+                // ==== CAPTCHA LOGIC ====
+        const captchaVariants = [
+            {
+                images: ["/files/capcha1.jfif", "/files/capcha11.jfif", "/files/capcha111.jfif"],
+                correctAnswer: "Bobrina Ballerina Cocosino",
+                options: ["Bobrina Ballerina Cocosino", "Ballerina Bobrina Capuccino", "Capuccina Ballerina"]
+            },
+            {
+                images: ["/files/capcha2.jfif", "/files/capcha22.jfif", "/files/capcha222.jfif"],
+                correctAnswer: "Bombombini Gusini",
+                options: ["Bandito Bobrito", "Bombombini Gusini", "Brr Brr Patapin"]
+            },
+            {
+                images: ["/files/capcha3.jpeg", "/files/capcha33.jfif", "/files/capcha333.jfif"],
+                correctAnswer: "Bombardino Crocodilo",
+                options: ["Cocofanto Elefanto", "Lirila Larila", "Bombardino Crocodilo"]
             }
-        }
+        ];
 
+        function showCaptcha(callback) {
+            const randomCaptcha = captchaVariants[Math.floor(Math.random() * captchaVariants.length)];
+
+            // Очищаем предыдущие элементы
+            const imagesContainer = document.getElementById('captchaImages');
+            const optionsContainer = document.getElementById('captchaOptions');
+            imagesContainer.innerHTML = '';
+            optionsContainer.innerHTML = '';
+
+            // Добавляем изображения
+            randomCaptcha.images.forEach(imgSrc => {
+                const img = document.createElement('img');
+                img.className = 'captcha-image';
+                img.src = imgSrc;
+                imagesContainer.appendChild(img);
+            });
+
+            // Добавляем варианты ответов (перемешанные)
+            const shuffledOptions = [...randomCaptcha.options].sort(() => Math.random() - 0.5);
+
+            shuffledOptions.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'captcha-option';
+                button.textContent = option;
+                button.addEventListener('click', function() {
+                    if (this.textContent === randomCaptcha.correctAnswer) {
+                        document.getElementById("captchaBox").style.display = "none";
+                        callback();
+                    } else {
+                        alert("НЕПРАВИЛЬНО! ПОПРОБУЙТЕ ЕЩЕ РАЗ.");
+                        showCaptcha(callback); // Показываем новую капчу
+                    }
+                });
+                optionsContainer.appendChild(button);
+            });
+
+            document.getElementById("captchaBox").style.display = "block";
+        }
         // ==== REMOVE ITEM (50% CHANCE TO FAIL) ====
         function removeItem(index) {
             if (Math.random() > 0.5) {
@@ -303,6 +384,13 @@
                     }
                 }
             }
+        }
+          function startRemoveItem(index) {
+            showCaptcha(() => removeItem(index));
+        }
+
+        function startCheckout() {
+            showCaptcha(() => checkout());
         }
     </script>
 </body>
