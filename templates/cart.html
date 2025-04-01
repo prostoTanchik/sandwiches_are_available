@@ -1,309 +1,150 @@
-<!-- templates/cart.html -->
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>ВАША КОРЗИНА (НО ВЫ НЕ УЙДЕТЕ)</title>
-    <style>
-        body {
-            font-family: "Comic Sans MS", "Papyrus", "Wingdings", sans-serif;
-            background-color: #FFEEEE;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
-            animation: bgFlash 1s infinite, shake 0.5s infinite alternate;
-        }
-        @keyframes bgFlash {
-            0% { background-color: #FFEEEE; }
-            50% { background-color: #EEFFEE; }
-            100% { background-color: #EEEEFF; }
-        }
-        @keyframes shake {
-            0% { transform: translateX(-5px); }
-            100% { transform: translateX(5px); }
-        }
-        h1 {
-            color: #FF0000;
-            text-shadow: 3px 3px 0 #00FF00;
-            transform: rotate(-5deg);
-            animation: colorShift 2s infinite;
-        }
-        @keyframes colorShift {
-            0% { color: red; }
-            50% { color: blue; }
-            100% { color: green; }
-        }
-        .cart-container {
-            background-color: #FFFF00;
-            border: 5px dashed #0000FF;
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-            overflow: hidden;
-        }
-        .cart-container::before {
-            content: "⚠️ ВАШИ ДАННЫЕ УТЕКАЮТ ⚠️";
-            position: absolute;
-            top: -10px;
-            left: 0;
-            right: 0;
-            font-size: 24px;
-            color: red;
-            animation: blink 0.5s infinite;
-        }
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            margin: 15px 0;
-            padding: 10px;
-            background: repeating-linear-gradient(45deg, #fff, #fff 10px, #ff0 10px, #ff0 20px);
-            position: relative;
-        }
-        .cart-item:hover {
-            transform: scale(1.1) rotate(3deg);
-        }
-        .item-name {
-            font-weight: bold;
-            text-decoration: underline wavy;
-        }
-        .item-price {
-            color: red;
-            font-size: 1.2em;
-            animation: pricePulse 1s infinite;
-        }
-        @keyframes pricePulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-        .remove-btn {
-            background: red !important;
-            color: white !important;
-            border: none;
-            padding: 2px 5px;
-            cursor: pointer;
-        }
-        .remove-btn:hover {
-            background: black !important;
-        }
-        .total {
-            font-size: 2em;
-            margin: 20px 0;
-            color: #FF00FF;
-            text-shadow: 2px 2px 0 #000;
-        }
-        .checkout-btn {
-            background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
-            color: black !important;
-            font-size: 24px;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            animation: rainbow 2s infinite;
-        }
-        @keyframes rainbow {
-            0% { filter: hue-rotate(0deg); }
-            100% { filter: hue-rotate(360deg); }
-        }
-        .empty-cart {
-            font-size: 2em;
-            color: #888;
-            text-align: center;
-            padding: 50px;
-        }
-        .secret-note {
-            font-size: 8px;
-            color: white;
-            background: black;
-            padding: 5px;
-            margin-top: 20px;
-        }
-        .countdown-timer {
-            font-size: 1.5em;
-            color: red;
-            animation: pulse 1s infinite;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-        .social-login {
-            background: #4267B2;
-            color: white;
-            padding: 10px;
-            margin: 10px 0;
-            cursor: pointer;
-        }
-        .captcha-box {
-            background: #000;
-            color: #FFF;
-            padding: 10px;
-            margin: 10px 0;
-        }
-        .notification {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            background: #FF0000;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            animation: slideIn 0.5s;
-        }
-        @keyframes slideIn {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
-        }
-    </style>
-</head>
-<body>
-    <h1>🚨 ВАША КОРЗИНА (ЦЕНЫ РАСТУТ!) 🚨</h1>
-    
-    <div class="cart-container">
-        <!-- COUNTDOWN TIMER (PRICES GO UP!) -->
-        <div class="countdown-timer" id="countdown">
-            ⏳ Цены вырастут через: <span id="timer">30</span> сек
-        </div>
+{% extends "base.html" %}
+{% block content %}
 
-        <!-- FORCED SOCIAL LOGIN -->
-        <div id="socialLogin" class="social-login">
-            🔒 ВОЙТИ ЧЕРЕЗ ГОСУСЛУГИ (ИЛИ УЙТИ ГОЛОДНЫМ)
-        </div>
+<h1>🚨 ВАША КОРЗИНА (ЦЕНЫ РАСТУТ!) 🚨</h1>
 
-        <!-- CAPTCHA BEFORE ANY ACTION -->
-        <div id="captchaBox" class="captcha-box" style="display: none;">
-            <p>Докажите, что вы не робот:</p>
-            <p>Сколько будет 2 + 2 в двоичной системе?</p>
-            <input type="text" id="captchaInput">
-            <button onclick="validateCaptcha()">Подтвердить</button>
-        </div>
-
-        <!-- CART ITEMS -->
-        {% if cart %}
-            {% for item in cart %}
-            <div class="cart-item">
-                <span class="item-name">{{ item.description }}</span>
-                <span class="item-price">{{ "%.2f"|format(item.price) }} ₽</span>
-                <button class="remove-btn" onclick="startRemoveItem({{ loop.index0 }})">✕</button>
-            </div>
-            {% endfor %}
-            
-            <div class="total">
-                ИТОГО: <span id="dynamicTotal">{{ "%.2f"|format(total) }}</span> ₽ <br>
-                <small>(+ чаевые {{ "%.2f"|format(total * 0.5) }} ₽)</small>
-            </div>
-            
-            <button class="checkout-btn" onclick="startCheckout()">ОПЛАТИТЬ (НЕ НАЖИМАТЬ)</button>
-            
-            <div class="secret-note">
-                ПССТ... ХОТИТЕ СКИДКУ 90%? ВВЕДИТЕ КОД "BREADGOD" НА СЛЕДУЮЩЕМ ЭКРАНЕ
-                (ЭТО НЕ ЛОВУШКА)
-            </div>
-        {% else %}
-            <div class="empty-cart">
-                🚫 ВАША КОРЗИНА ПУСТА 🚫<br>
-                <small>Как и ваша душа</small>
-            </div>
-        {% endif %}
+<div class="cart-container">
+    <!-- COUNTDOWN TIMER (PRICES GO UP!) -->
+    <div class="countdown-timer" id="countdown">
+        ⏳ Цены вырастут через: <span id="timer">30</span> сек
     </div>
 
-    <!-- MYSTERY ITEM NOTIFICATION -->
-    <div id="mysteryNotification" class="notification" style="display: none;">
-        🎉 ВАМ ДОБАВЛЕН ТАИНСТВЕННЫЙ БУТЕРБРОД! 🎉
+    <!-- FORCED SOCIAL LOGIN -->
+    <div id="socialLogin" class="social-login">
+        🔒 ВОЙТИ ЧЕРЕЗ ГОСУСЛУГИ (ИЛИ УЙТИ ГОЛОДНЫМ)
     </div>
 
-    <script>
-        // ==== COUNTDOWN TIMER (PRICES INCREASE!) ====
-        let timeLeft = 30;
-        const countdown = setInterval(() => {
-            timeLeft--;
-            document.getElementById("timer").textContent = timeLeft;
-            
-            if (timeLeft <= 0) {
-                // Increase all prices by 10%
-                document.querySelectorAll(".item-price").forEach(priceEl => {
-                    const currentPrice = parseFloat(priceEl.textContent);
-                    const newPrice = currentPrice * 1.10;
-                    priceEl.textContent = newPrice.toFixed(2);
-                });
-                timeLeft = 30; // Reset timer
-            }
-        }, 1000);
+    <!-- CAPTCHA BEFORE ANY ACTION -->
+    <div id="captchaBox" class="captcha-box" style="display: none;">
+        <p>Докажите, что вы не робот:</p>
+        <p>Сколько будет 2 + 2 в двоичной системе?</p>
+        <input type="text" id="captchaInput">
+        <button onclick="validateCaptcha()">Подтвердить</button>
+    </div>
 
-        // ==== AUTO-ADD MYSTERY ITEM (EVERY 30 SEC) ====
-        setInterval(() => {
-            fetch('/add_mystery_item', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ surprise: true })
-            }).then(() => {
-                // Show notification
-                const notif = document.getElementById("mysteryNotification");
-                notif.style.display = "block";
-                setTimeout(() => { notif.style.display = "none"; }, 3000);
-                location.reload(); // Refresh to show new item
+    <!-- CART ITEMS -->
+    {% if cart %}
+        {% for item in cart %}
+        <div class="cart-item">
+            <span class="item-name">{{ item.description }}</span>
+            <span class="item-price">{{ "%.2f"|format(item.price) }} ₽</span>
+            <button class="remove-btn" onclick="startRemoveItem({{ loop.index0 }})">✕</button>
+        </div>
+        {% endfor %}
+        
+        <div class="total">
+            ИТОГО: <span id="dynamicTotal">{{ "%.2f"|format(total) }}</span> ₽ <br>
+            <small>(+ чаевые {{ "%.2f"|format(total * 0.5) }} ₽)</small>
+        </div>
+        
+        <button class="checkout-btn" onclick="startCheckout()">ОПЛАТИТЬ (НЕ НАЖИМАТЬ)</button>
+        
+        <div class="secret-note">
+            ПССТ... ХОТИТЕ СКИДКУ 90%? ВВЕДИТЕ КОД "BREADGOD" НА СЛЕДУЮЩЕМ ЭКРАНЕ
+            (ЭТО НЕ ЛОВУШКА)
+        </div>
+    {% else %}
+        <div class="empty-cart">
+            🚫 ВАША КОРЗИНА ПУСТА 🚫<br>
+            <small>Как и ваша душа</small>
+        </div>
+    {% endif %}
+</div>
+
+<!-- MYSTERY ITEM NOTIFICATION -->
+<div id="mysteryNotification" class="notification" style="display: none;">
+    🎉 ВАМ ДОБАВЛЕН ТАИНСТВЕННЫЙ БУТЕРБРОД!🎉
+    удалить его уже нельзя, не благодарите!
+</div>
+
+<script>
+    // ==== COUNTDOWN TIMER (PRICES INCREASE!) ====
+    let timeLeft = 30;
+    const countdown = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer").textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+            // Increase all prices by 10%
+            document.querySelectorAll(".item-price").forEach(priceEl => {
+                const currentPrice = parseFloat(priceEl.textContent);
+                const newPrice = currentPrice * 1.10;
+                priceEl.textContent = newPrice.toFixed(2);
             });
-        }, 30000); // Every 30 seconds
+            timeLeft = 30; // Reset timer
+        }
+    }, 1000);
 
-        // ==== FORCE SOCIAL LOGIN ====
-        document.getElementById("socialLogin").addEventListener("click", () => {
-            alert("ВОЙДИТЕ ЧЕРЕЗ FACEBOOK, ИНАЧЕ ВЫ НЕ СМОЖЕТЕ КУПИТЬ БУТЕРБРОД!");
-            window.open("https://facebook.com", "_blank");
+    // ==== AUTO-ADD MYSTERY ITEM (EVERY 30 SEC) ====
+    setInterval(() => {
+        fetch('/add_mystery_item', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ surprise: true })
+        }).then(() => {
+            // Show notification
+            const notif = document.getElementById("mysteryNotification");
+            notif.style.display = "block";
+            setTimeout(() => { notif.style.display = "none"; }, 3000);
+            location.reload(); // Refresh to show new item
         });
+    }, 30000); // Every 30 seconds
 
-        // ==== CAPTCHA FOR EVERY ACTION ====
-        function startRemoveItem(index) {
-            showCaptcha(() => removeItem(index));
+    // ==== FORCE SOCIAL LOGIN ====
+    document.getElementById("socialLogin").addEventListener("click", () => {
+        alert("ПОКА В РАЗРАБОТКЕ, НО СКОРО ТУТ ВСЁ БУДЕТ РАБОТАТЬ НАВЕРНОЕ");
+    });
+
+    // ==== CAPTCHA FOR EVERY ACTION ====
+    function startRemoveItem(index) {
+        showCaptcha(() => removeItem(index));
+    }
+
+    function startCheckout() {
+        showCaptcha(() => checkout());
+    }
+
+    function showCaptcha(callback) {
+        document.getElementById("captchaBox").style.display = "block";
+        window.captchaCallback = callback;
+    }
+
+    function validateCaptcha() {
+        const answer = document.getElementById("captchaInput").value;
+        if (answer === "100") { // 4 in binary is 100
+            document.getElementById("captchaBox").style.display = "none";
+            window.captchaCallback();
+        } else {
+            alert("НЕПРАВИЛЬНО! ПОПРОБУЙТЕ ЕЩЕ РАЗ.");
         }
+    }
 
-        function startCheckout() {
-            showCaptcha(() => checkout());
+    // ==== REMOVE ITEM (50% CHANCE TO FAIL) ====
+    function removeItem(index) {
+        if (Math.random() > 0.5) {
+            alert("ОШИБКА: ВЫ НЕ МОЖЕТЕ УДАЛИТЬ ЭТОТ ПРЕДМЕТ.");
+            return;
         }
+        fetch('/remove_from_cart', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ index: index })
+        }).then(() => location.reload());
+    }
 
-        function showCaptcha(callback) {
-            document.getElementById("captchaBox").style.display = "block";
-            window.captchaCallback = callback;
-        }
-
-        function validateCaptcha() {
-            const answer = document.getElementById("captchaInput").value;
-            if (answer === "100") { // 4 in binary is 100
-                document.getElementById("captchaBox").style.display = "none";
-                window.captchaCallback();
-            } else {
-                alert("НЕПРАВИЛЬНО! ПОПРОБУЙТЕ ЕЩЕ РАЗ.");
-            }
-        }
-
-        // ==== REMOVE ITEM (50% CHANCE TO FAIL) ====
-        function removeItem(index) {
-            if (Math.random() > 0.5) {
-                alert("ОШИБКА: ВЫ НЕ МОЖЕТЕ УДАЛИТЬ ЭТОТ ПРЕДМЕТ.");
-                return;
-            }
-            fetch('/remove_from_cart', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ index: index })
-            }).then(() => location.reload());
-        }
-
-        // ==== CHECKOUT (MULTIPLE CONFIRMATIONS) ====
-        function checkout() {
-            if (confirm("ВЫ УВЕРЕНЫ?")) {
-                if (confirm("СЕРЬЕЗНО?")) {
-                    if (confirm("ПОСЛЕДНИЙ ШАНС!")) {
-                        setTimeout(() => {
-                            alert("ОШИБКА ПЛАТЕЖА: ВАША КАРТА ОТКЛОНЕНА\n(Но мы уже списали деньги)");
-                            window.location.href = '/orders';
-                        }, 3000);
-                    }
+    // ==== CHECKOUT (MULTIPLE CONFIRMATIONS) ====
+    function checkout() {
+        if (confirm("ВЫ УВЕРЕНЫ?")) {
+            if (confirm("СЕРЬЕЗНО?")) {
+                if (confirm("ПОСЛЕДНИЙ ШАНС!")) {
+                    setTimeout(() => {
+                        alert("ОШИБКА ПЛАТЕЖА: ВАША КАРТА ОТКЛОНЕНА\n(Но мы уже списали деньги)");
+                        window.location.href = '/orders';
+                    }, 3000);
                 }
             }
         }
-    </script>
-</body>
-</html>
+    }
+</script>
+
+{% endblock %}
