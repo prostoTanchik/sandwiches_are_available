@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>УЖАСНАЯ АВТОРИЗАЦИЯ</title>
+    <style>
+        body {
+            font-family: "Comic Sans MS", "Papyrus", cursive;
+            background-color: #FF00FF;
+            background-image: url('https://png.pngtree.com/thumb_back/fh260/background/20221018/pngtree-sandwiches-lettuce-hot-lunch-photo-image_1438937.jpg');
+            color: #00FF00;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .login-container {
+            width: 300px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #FFFF00;
+            border: 10px ridge #FF0000;
+            border-radius: 50px 0 50px 0;
+            box-shadow: 15px 15px 0 #0000FF;
+            transform: rotate(3deg);
+            animation: shake 0.5s infinite;
+        }
+        h1 {
+            color: #FF0000;
+            text-shadow: 3px 3px 0 #0000FF;
+            font-size: 28px;
+            margin-bottom: 30px;
+            animation: blink 1s infinite;
+        }
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            font-size: 20px;
+            color: #0000FF;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+        input {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            background-color: #00FFFF;
+            border: 5px dotted #FF00FF;
+            color: #FF0000;
+            box-sizing: border-box;
+            transition: all 0.3s;
+        }
+        button {
+            background: linear-gradient(to right, #FF0000, #00FF00, #0000FF);
+            color: white;
+            font-size: 24px;
+            padding: 15px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 20px;
+            animation: pulse 2s infinite;
+        }
+        .captcha-container {
+            width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #FFFF00;
+            border: 10px ridge #FF0000;
+            box-shadow: 15px 15px 0 #0000FF;
+        }
+        .captcha-title {
+            color: #FF0000;
+            font-weight: bold;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .captcha-images {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        .captcha-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border: 3px solid #0000FF;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .captcha-image:hover {
+            transform: scale(1.1);
+        }
+        .captcha-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .captcha-option {
+            padding: 15px;
+            background-color: #00FF00;
+            color: #000;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .captcha-option:hover {
+            background-color: #FF00FF;
+            color: white;
+        }
+        .error-message {
+            color: white;
+            background-color: #FF0000;
+            padding: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>ВОЙТИ В СИСТЕМУ</h1>
+
+        <div class="input-group">
+            <label for="username">ВАШЕ ИМЯ:</label>
+            <input type="text" id="username" name="username" placeholder="Минимум 5 символов">
+        </div>
+
+        <div class="input-group">
+            <label for="password">ВАШ ПАРОЛЬ:</label>
+            <input type="password" id="password" name="password" placeholder="Сложный пароль">
+        </div>
+
+        <button id="loginBtn">ВОЙТИ</button>
+
+            <div class="captcha-container">
+        <div class="captcha-title">ДОКАЖИТЕ, ЧТО ВЫ НЕ БОТ:</div>
+
+        <div class="captcha-images" id="captchaImages">
+            <!-- Изображения будут добавлены через JS -->
+        </div>
+
+        <div class="captcha-options" id="captchaOptions">
+            <!-- Варианты ответов будут добавлены через JS -->
+        </div>
+
+        <div class="error-message" id="errorMessage">
+            Неверный ответ! Попробуйте еще раз.
+        </div>
+    </div>
+    </div>
+
+    <script>
+        // Случайное перемещение формы
+        setInterval(() => {
+            const form = document.querySelector('.login-container');
+            form.style.marginLeft = (Math.random() * 40 - 20) + 'px';
+            form.style.marginTop = (Math.random() * 40 - 20) + 'px';
+        }, 3000);
+
+
+         const captchaVariants = [
+            {
+                images: ["/files/capcha1.jfif", "/files/capcha11.jfif", "/files/capcha111.jfif"],
+                correctAnswer: "Bobrina Ballerina Cocosino",
+                options: ["Bobrina Ballerina Cocosino", "Ballerina Bobrina Capuccino", "Capuccina Ballerina"]
+            },
+            {
+                images: ["/files/capcha2.jfif", "/files/capcha22.jfif", "/files/capcha222.jfif"],
+                correctAnswer: "Bombombini Gusini",
+                options: ["Bandito Bobrito", "Bombombini Gusini", "Brr Brr Patapin"]
+            },
+            {
+                images: ["/files/capcha3.jpeg", "/files/capcha33.jfif", "/files/capcha333.jfif"],
+                correctAnswer: "Bombardino Crocodilo",
+                options: ["Cocofanto Elefanto", "Lirila Larila", "Bombardino Crocodilo"]
+            }
+        ];
+
+        // Выбираем случайную капчу
+        const randomCaptcha = captchaVariants[Math.floor(Math.random() * captchaVariants.length)];
+
+        // Отображаем изображения
+        const imagesContainer = document.getElementById('captchaImages');
+        randomCaptcha.images.forEach(imgSrc => {
+            const img = document.createElement('img');
+            img.className = 'captcha-image';
+            img.src = imgSrc;
+            imagesContainer.appendChild(img);
+        });
+
+        // Отображаем варианты ответов
+        const optionsContainer = document.getElementById('captchaOptions');
+        // Перемешиваем варианты ответов
+        const shuffledOptions = [...randomCaptcha.options].sort(() => Math.random() - 0.5);
+
+        shuffledOptions.forEach(option => {
+            const button = document.createElement('button');
+            button.className = 'captcha-option';
+            button.textContent = option;
+            button.addEventListener('click', function() {
+                if (this.textContent === randomCaptcha.correctAnswer) {
+                    alert('Правильно! Но это ни на что не влияет :)');
+                } else {
+                    document.getElementById('errorMessage').style.display = 'block';
+                    // Перезагружаем страницу для новой капчи
+                    setTimeout(() => location.reload(), 1000);
+                }
+            });
+            optionsContainer.appendChild(button);
+        });
+
+        // Случайное изменение цвета полей ввода
+        setInterval(() => {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                if (Math.random() > 0.7) {
+                    input.style.backgroundColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+                }
+            });
+        }, 1000);
+    </script>
+</body>
+</html>
